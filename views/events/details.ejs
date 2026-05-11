@@ -1,0 +1,95 @@
+<%
+  const eventDate = new Date(event.date);
+  const isPast = eventDate.getTime() < Date.now();
+  const available = event.capacity - event.ticketsBooked;
+  const soldOut = available <= 0;
+%>
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <img src="<%= event.imageUrl %>" alt="<%= event.title %>"
+           class="img-fluid rounded shadow-sm w-100"
+           style="max-height: 360px; object-fit: cover;"
+           onerror="this.onerror=null;this.src='https://placehold.co/800x400/4F46E5/ffffff?text=EventFlow';" />
+
+      <div class="mt-3 d-flex align-items-center gap-2 flex-wrap">
+        <span class="category-badge"><%= event.category %></span>
+        <% if (soldOut) { %>
+          <span class="badge bg-danger">Sold out</span>
+        <% } else if (isPast) { %>
+          <span class="badge bg-secondary">Past event</span>
+        <% } else { %>
+          <span class="badge bg-success"><%= available %> tickets available</span>
+        <% } %>
+      </div>
+
+      <h2 class="mt-3 mb-2"><%= event.title %></h2>
+
+      <div class="text-muted mb-3">
+        <div><i class="bi bi-calendar3"></i>
+          <%= eventDate.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %>
+          at <%= eventDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) %>
+        </div>
+        <div><i class="bi bi-geo-alt"></i> <%= event.location %></div>
+      </div>
+
+      <h5>About this event</h5>
+      <p style="white-space: pre-line;"><%= event.description %></p>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="form-card">
+        <div class="d-flex justify-content-between align-items-baseline mb-2">
+          <h4 class="mb-0">
+            <% if (event.price > 0) { %>
+              R<%= Number(event.price).toFixed(2) %>
+            <% } else { %>
+              Free
+            <% } %>
+          </h4>
+          <span class="text-muted small">per ticket</span>
+        </div>
+
+        <div class="mb-3">
+          <div class="capacity-label">
+            <span><strong><%= event.ticketsBooked %></strong> booked</span>
+            <span><strong><%= event.capacity %></strong> capacity</span>
+          </div>
+          <div class="progress" style="height: 8px;">
+            <div class="progress-bar bg-primary"
+                 style="width: <%= Math.min(100, (event.ticketsBooked / event.capacity) * 100) %>%"></div>
+          </div>
+        </div>
+
+        <% if (isPast) { %>
+          <div class="alert alert-secondary mb-0">This event has already taken place.</div>
+        <% } else if (soldOut) { %>
+          <div class="alert alert-danger mb-0">Sorry — this event is fully booked.</div>
+        <% } else if (!currentUser) { %>
+          <a href="/auth/login" class="btn btn-primary w-100">Log in to book</a>
+          <p class="text-center text-muted small mt-2 mb-0">
+            New here? <a href="/auth/register">Create an account</a>
+          </p>
+        <% } else { %>
+          <form action="/bookings/<%= event._id %>" method="POST">
+            <label class="form-label">Quantity</label>
+            <input type="number" name="quantity" class="form-control mb-3"
+                   min="1" max="<%= Math.min(20, available) %>" value="1" required />
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="bi bi-ticket-perforated"></i> Book now
+            </button>
+          </form>
+          <p class="text-muted small mt-2 mb-0 text-center">
+            You can cancel from your dashboard at any time before the event.
+          </p>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <a href="/" class="text-decoration-none">
+      <i class="bi bi-arrow-left"></i> Back to all events
+    </a>
+  </div>
+</div>

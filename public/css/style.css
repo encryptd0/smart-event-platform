@@ -1,0 +1,276 @@
+/* EventFlow custom styles — layered on top of Bootstrap 5 */
+
+:root {
+  --ef-primary: #4F46E5;
+  --ef-primary-dark: #3730A3;
+  --ef-accent: #F59E0B;
+  --ef-accent-dark: #B45309;
+  --ef-bg: #F9FAFB;
+  --ef-surface: #FFFFFF;
+  --ef-text: #111827;
+  --ef-muted: #6B7280;
+  --ef-border: #E5E7EB;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--ef-bg);
+  color: var(--ef-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* ───── Brand colour overrides ───── */
+.btn-primary,
+.bg-primary {
+  background-color: var(--ef-primary) !important;
+  border-color: var(--ef-primary) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--ef-primary-dark) !important;
+  border-color: var(--ef-primary-dark) !important;
+}
+
+.btn-outline-primary {
+  color: var(--ef-primary);
+  border-color: var(--ef-primary);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--ef-primary);
+  border-color: var(--ef-primary);
+}
+
+.text-primary {
+  color: var(--ef-primary) !important;
+}
+
+.btn-accent {
+  background-color: var(--ef-accent);
+  border-color: var(--ef-accent);
+  color: #fff;
+}
+
+.btn-accent:hover {
+  background-color: var(--ef-accent-dark);
+  border-color: var(--ef-accent-dark);
+  color: #fff;
+}
+
+.badge.bg-primary {
+  background-color: var(--ef-primary) !important;
+}
+
+a {
+  color: var(--ef-primary);
+}
+
+a:hover {
+  color: var(--ef-primary-dark);
+}
+
+/* ───── Navbar ───── */
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.navbar-brand .brand-mark {
+  color: var(--ef-accent);
+}
+
+/* ───── Hero ───── */
+.hero {
+  background: linear-gradient(135deg, var(--ef-primary) 0%, #6366F1 100%);
+  color: #fff;
+  padding: 4rem 0 3rem;
+  margin-bottom: 2rem;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.hero h1 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.hero .lead {
+  opacity: 0.9;
+}
+
+/* ───── Event cards ───── */
+.event-card {
+  background: var(--ef-surface);
+  border: 1px solid var(--ef-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -10px rgba(79, 70, 229, 0.25);
+}
+
+.event-card .event-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background: #EEF2FF;
+}
+
+.event-card .card-body {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-card .event-meta {
+  color: var(--ef-muted);
+  font-size: 0.875rem;
+}
+
+.event-card .event-title {
+  font-weight: 700;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.event-card .price-tag {
+  font-weight: 700;
+  color: var(--ef-primary);
+}
+
+/* ───── Stat cards (admin dashboard) ───── */
+.stat-card {
+  background: var(--ef-surface);
+  border: 1px solid var(--ef-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-card .stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--ef-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex: 0 0 48px;
+}
+
+.stat-card.accent .stat-icon {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--ef-accent-dark);
+}
+
+.stat-card .stat-label {
+  font-size: 0.85rem;
+  color: var(--ef-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.stat-card .stat-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.1;
+}
+
+/* ───── Capacity progress ───── */
+.capacity-row + .capacity-row {
+  margin-top: 0.75rem;
+}
+
+.capacity-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+/* ───── Forms ───── */
+.form-card {
+  background: var(--ef-surface);
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid var(--ef-border);
+}
+
+.field-error {
+  color: #B91C1C;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* ───── Badges ───── */
+.category-badge {
+  background: rgba(79, 70, 229, 0.1);
+  color: var(--ef-primary);
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+}
+
+.status-pill {
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+
+.status-new       { background: rgba(245, 158, 11, 0.15); color: var(--ef-accent-dark); }
+.status-read      { background: rgba(59, 130, 246, 0.15); color: #1D4ED8; }
+.status-resolved  { background: rgba(16, 185, 129, 0.15); color: #047857; }
+.status-confirmed { background: rgba(16, 185, 129, 0.15); color: #047857; }
+.status-cancelled { background: rgba(239, 68, 68, 0.15);  color: #B91C1C; }
+
+/* ───── Footer ───── */
+footer.site-footer {
+  background: #111827;
+  color: #D1D5DB;
+  padding: 2rem 0;
+  margin-top: 3rem;
+}
+
+footer.site-footer a {
+  color: #fff;
+}
+
+/* ───── Misc ───── */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--ef-muted);
+}
+
+.empty-state i {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}

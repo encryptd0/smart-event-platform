@@ -1,0 +1,70 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <i class="bi bi-calendar-event-fill brand-mark"></i>
+      Event<span class="brand-mark">Flow</span>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+      aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath === '/' ? 'active fw-semibold' : '' %>" href="/">Browse events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= currentPath.startsWith('/contact') ? 'active fw-semibold' : '' %>" href="/contact">Contact</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <% if (!currentUser) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/auth/login">Log in</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-primary ms-lg-2" href="/auth/register">Sign up</a>
+          </li>
+        <% } else { %>
+          <li class="nav-item">
+            <a class="nav-link <%= currentPath.startsWith('/dashboard') ? 'active fw-semibold' : '' %>" href="/dashboard">
+              <i class="bi bi-speedometer2"></i> Dashboard
+            </a>
+          </li>
+
+          <% if (currentUser.role === 'admin') { %>
+            <li class="nav-item">
+              <a class="nav-link <%= currentPath.startsWith('/admin/events') ? 'active fw-semibold' : '' %>" href="/admin/events">
+                <i class="bi bi-calendar-week"></i> Manage events
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link <%= currentPath.startsWith('/admin/enquiries') ? 'active fw-semibold' : '' %>" href="/admin/enquiries">
+                <i class="bi bi-inbox"></i> Enquiries
+              </a>
+            </li>
+          <% } %>
+
+          <li class="nav-item">
+            <span class="nav-link text-muted small">
+              <i class="bi bi-person-circle"></i> <%= currentUser.name %>
+              <% if (currentUser.role === 'admin') { %>
+                <span class="badge bg-warning text-dark ms-1">Admin</span>
+              <% } %>
+            </span>
+          </li>
+          <li class="nav-item">
+            <form action="/auth/logout" method="POST" class="d-inline">
+              <button type="submit" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-box-arrow-right"></i> Log out
+              </button>
+            </form>
+          </li>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>

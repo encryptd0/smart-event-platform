@@ -1,0 +1,46 @@
+<%
+  const available = (event.capacity || 0) - (event.ticketsBooked || 0);
+  const soldOut = available <= 0;
+  const eventDate = new Date(event.date);
+%>
+<div class="event-card">
+  <img src="<%= event.imageUrl %>" alt="<%= event.title %>" class="event-image"
+       onerror="this.onerror=null;this.src='https://placehold.co/600x400/4F46E5/ffffff?text=EventFlow';" />
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start mb-1">
+      <span class="category-badge"><%= event.category %></span>
+      <% if (soldOut) { %>
+        <span class="badge bg-danger">Sold out</span>
+      <% } else { %>
+        <span class="text-muted small"><%= available %> left</span>
+      <% } %>
+    </div>
+
+    <h5 class="event-title mb-1"><%= event.title %></h5>
+
+    <div class="event-meta mb-2">
+      <div><i class="bi bi-calendar3"></i>
+        <%= eventDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+        · <%= eventDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) %>
+      </div>
+      <div><i class="bi bi-geo-alt"></i> <%= event.location %></div>
+    </div>
+
+    <p class="text-muted small flex-grow-1">
+      <%= event.description.length > 110 ? event.description.slice(0, 110) + '…' : event.description %>
+    </p>
+
+    <div class="d-flex justify-content-between align-items-center mt-2">
+      <span class="price-tag">
+        <% if ((event.price || 0) > 0) { %>
+          R<%= Number(event.price).toFixed(2) %>
+        <% } else { %>
+          Free
+        <% } %>
+      </span>
+      <a href="/events/<%= event._id %>" class="btn btn-sm btn-outline-primary">
+        View details <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</div>

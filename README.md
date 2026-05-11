@@ -1,183 +1,235 @@
 # EventFlow — Smart Event Management & Ticketing Platform
 
-A secure full-stack web application for managing events, ticket bookings, and customer enquiries. Built for **Advanced Events (Pty) Ltd** to replace fragmented spreadsheets and manual booking processes with a unified, role-aware platform.
+A secure, role-aware full-stack web application for managing events, bookings, and customer enquiries. Built for **Advanced Events (Pty) Ltd** as part of the **WPR371** module at **Belgium Campus iTversity**.
 
 ---
 
 ## 📖 Overview
 
-EventFlow allows event organisers to create and manage events, monitor bookings through analytics dashboards, and respond to customer enquiries in one place. Standard users can browse events, book tickets with automated capacity validation, and track their booking history.
+EventFlow replaces fragmented spreadsheets and manual booking processes with a single platform that:
 
-The system follows the **MVC architectural pattern** with clear separation of concerns, middleware-based authentication and authorisation, and MongoDB for data persistence.
+- Lets the public discover and book tickets to upcoming events.
+- Gives administrators full CRUD control over events, plus operational analytics.
+- Captures and triages enquiries from a public contact form.
+- Enforces capacity, role, and validation rules at every layer.
 
----
-
-## ✨ Key Features
-
-- **User Authentication** — Secure registration and login with hashed passwords (bcrypt) and role-based access control (Admin / Standard User).
-- **Event Management (Admin)** — Full CRUD operations for events, with capacity and availability controls.
-- **Ticket Booking System** — Automated capacity validation prevents overbooking; users can book and view their booking history.
-- **Search & Filtering** — Discover events by date, category, and availability.
-- **Admin Dashboard** — Analytics on total bookings, popular events, and capacity usage.
-- **Contact / Enquiry Management** — Users submit enquiries; admins view and manage them from the dashboard.
+It is built on a strict **MVC** architecture with three middleware layers (auth, validation, error handling) and uses MongoDB for persistence.
 
 ---
 
-## 🛠 Technologies Used
+## ✨ Key features
 
-| Layer | Technology |
-|---|---|
-| Runtime | Node.js |
-| Framework | Express.js |
-| Templating | EJS |
-| Database | MongoDB + Mongoose ODM |
-| Auth | bcrypt, express-session *(or JWT — update to match)* |
-| Styling | HTML5, CSS3, Bootstrap *(or Tailwind — update to match)* |
-| Config | dotenv |
-| Dev Tools | nodemon |
-| Version Control | Git & GitHub |
+- 🔐 Session-based auth with bcrypt-hashed passwords and a Mongo-backed session store.
+- 🛡️ Role-aware authorisation (`user` / `admin`) enforced via dedicated middleware.
+- 🎟️ Atomic ticket booking — concurrent requests cannot overshoot capacity.
+- 📊 Admin analytics dashboard (users, revenue, popular events, capacity usage).
+- 🔎 Search + filter (category / date range / availability) on the public listing.
+- 📥 Public contact form, admin enquiry triage with status workflow.
+- ✅ Server-side validation via `express-validator` on every form.
+- 🚫 Friendly 403 / 404 / 500 error pages.
 
 ---
 
-## 👥 Team Members and Roles
+## 🛠 Tech stack
 
-| Name | Student Number | Role |
-|---|---|---|
-| *Member 1* | *Student #* | Team Lead / Project Coordinator |
-| *Member 2* | *Student #* | Backend Developer |
-| *Member 3* | *Student #* | Frontend Developer |
-| *Member 4* | *Student #* | Database Engineer |
-| *Member 5* | *Student #* | Security / DevOps Engineer |
+| Layer        | Choice                                                  |
+| ------------ | ------------------------------------------------------- |
+| Runtime      | Node.js 18+                                             |
+| Server       | Express.js                                              |
+| Templating   | EJS + `express-ejs-layouts`                             |
+| Database     | MongoDB + Mongoose                                      |
+| Auth         | `bcrypt`, `express-session`, `connect-mongo`            |
+| Validation   | `express-validator`                                     |
+| Flash msgs   | `connect-flash`                                         |
+| Styling      | Bootstrap 5 (CDN) + Bootstrap Icons + custom CSS        |
+| Method spoof | `method-override` (PUT / DELETE from forms)             |
+| Config       | `dotenv`                                                |
+| Dev tooling  | `nodemon`                                               |
 
 ---
 
-## 📁 Project Structure
+## 👥 Team
+
+| Name              | Student number | Role / contribution |
+| ----------------- | -------------- | ------------------- |
+| _Student name 1_  | _XXXXXXXX_     | _e.g. Models & DB schema_ |
+| _Student name 2_  | _XXXXXXXX_     | _e.g. Auth & sessions_    |
+| _Student name 3_  | _XXXXXXXX_     | _e.g. Admin dashboard_    |
+| _Student name 4_  | _XXXXXXXX_     | _e.g. UI / styling_       |
+
+> Replace the placeholders above with your team's details before submission.
+
+---
+
+## 📁 Project structure
 
 ```
 eventflow/
-├── controllers/        # Request handlers (auth, events, bookings, contact)
-├── models/             # Mongoose schemas (User, Event, Booking, Enquiry)
-├── routes/             # Express route definitions
-├── middleware/         # Auth, authorisation, and error-handling middleware
-├── views/              # EJS templates
+├── app.js                        # Entry point
+├── package.json
+├── .env.example
+├── .gitignore
+├── README.md
+├── config/database.js            # MongoDB connection
+├── models/                       # Mongoose schemas
+│   ├── User.js
+│   ├── Event.js
+│   ├── Booking.js
+│   └── Enquiry.js
+├── controllers/                  # Request handlers
+│   ├── authController.js
+│   ├── eventController.js
+│   ├── bookingController.js
+│   ├── dashboardController.js
+│   ├── contactController.js
+│   └── adminController.js
+├── routes/                       # Express routers
+│   ├── authRoutes.js
+│   ├── eventRoutes.js
+│   ├── bookingRoutes.js
+│   ├── dashboardRoutes.js
+│   ├── contactRoutes.js
+│   └── adminRoutes.js
+├── middleware/                   # 3 middleware layers
+│   ├── authMiddleware.js
+│   ├── validationMiddleware.js
+│   └── errorMiddleware.js
+├── views/                        # EJS templates
+│   ├── layout.ejs
 │   ├── partials/
 │   ├── auth/
 │   ├── events/
 │   ├── dashboard/
-│   └── contact/
-├── public/             # Static assets (CSS, images, client JS)
-├── config/             # DB connection and environment config
-├── .env.example        # Environment variable template
-├── app.js              # Application entry point
-└── package.json
+│   ├── contact/
+│   └── errors/
+├── public/                       # Static assets
+│   ├── css/style.css
+│   ├── js/main.js
+│   └── images/
+└── seeders/seed.js               # DB seed script
 ```
 
 ---
 
-## 🚀 Setup Instructions
+## 🚀 Setup
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- MongoDB (local installation or MongoDB Atlas account)
-- Git
+- Node.js **v18 or newer**
+- A running MongoDB instance (local `mongod` on port 27017 works out of the box)
 
-### Installation
+### 1. Clone & install
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/<your-username>/<repo-name>.git
-   cd <repo-name>
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-
-   Create a `.env` file in the project root (use `.env.example` as a template):
-   ```env
-   PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/eventflow
-   SESSION_SECRET=your_secret_here
-   NODE_ENV=development
-   ```
-
-4. **Run the application**
-
-   For development (auto-reload with nodemon):
-   ```bash
-   npm run dev
-   ```
-
-   For production:
-   ```bash
-   npm start
-   ```
-
-5. **Access the app**
-
-   Open your browser at [http://localhost:3000](http://localhost:3000).
-
----
-
-## 🔐 Default Admin Account
-
-For demonstration purposes, an admin account can be seeded:
-
-```
-Email:    admin@eventflow.local
-Password: Admin@1234
+```bash
+git clone <your-repo-url> eventflow
+cd eventflow
+npm install
 ```
 
-*Update or remove this section based on your seeding setup.*
+### 2. Configure environment
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and set:
+
+```ini
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/eventflow
+SESSION_SECRET=replace_with_a_long_random_string
+NODE_ENV=development
+```
+
+### 3. Seed the database
+
+```bash
+npm run seed             # interactive — prompts before clearing
+# or
+npm run seed -- --force  # clear and reseed without prompting
+```
+
+### 4. Run the app
+
+```bash
+npm run dev    # nodemon (development)
+# or
+npm start      # plain node
+```
+
+Visit **http://localhost:3000**.
 
 ---
 
-## 🌐 Pages
+## 🔑 Default credentials (after seeding)
 
-| Page | Route | Access |
-|---|---|---|
-| Home / Event Listing | `/` | Public |
-| Login / Register | `/auth/login`, `/auth/register` | Public |
-| Event Management | `/admin/events` | Admin only |
-| Booking & Dashboard | `/dashboard` | Authenticated |
-| Contact / Enquiries | `/contact` | Public (submit) / Admin (manage) |
+| Role  | Email                      | Password    |
+| ----- | -------------------------- | ----------- |
+| Admin | `admin@eventflow.local`    | `Admin@1234`|
+| User  | `user1@eventflow.local`    | `User@1234` |
+| User  | `user2@eventflow.local`    | `User@1234` |
 
----
-
-## 🖼 Screenshots
-
-*Add screenshots of key pages here once the UI is finalised.*
-
-- Home / Event Listing
-- Login & Register
-- Admin Event Management
-- User Dashboard & Booking History
-- Admin Analytics Dashboard
-- Contact Form & Enquiry Management
+> Change `SESSION_SECRET` and these passwords before any non-academic use.
 
 ---
 
-## 🧪 Testing
+## 🗺️ Page routes
 
-API endpoints can be tested using Postman, Thunder Client, or REST Client. A Postman collection is included in `/docs/postman_collection.json` *(if applicable)*.
+| Method & path                          | Access  | Purpose                                    |
+| -------------------------------------- | ------- | ------------------------------------------ |
+| `GET  /`                               | Public  | Event listing + search/filter              |
+| `GET  /events/:id`                     | Public  | Event detail page                          |
+| `GET  /auth/login`                     | Guest   | Login form                                 |
+| `POST /auth/login`                     | Guest   | Process login                              |
+| `GET  /auth/register`                  | Guest   | Register form                              |
+| `POST /auth/register`                  | Guest   | Create account & auto-login                |
+| `POST /auth/logout`                    | Auth    | Destroy session                            |
+| `GET  /dashboard`                      | Auth    | User dashboard or admin analytics          |
+| `POST /bookings/:eventId`              | Auth    | Atomically book tickets                    |
+| `POST /bookings/:id/cancel`            | Auth    | Cancel a confirmed booking                 |
+| `GET  /contact`                        | Public  | Contact form                               |
+| `POST /contact`                        | Public  | Submit enquiry                             |
+| `GET  /admin/events`                   | Admin   | Manage events table                        |
+| `GET  /admin/events/new`               | Admin   | New event form                             |
+| `POST /admin/events`                   | Admin   | Create event                               |
+| `GET  /admin/events/:id/edit`          | Admin   | Edit event form                            |
+| `PUT  /admin/events/:id`               | Admin   | Update event                               |
+| `DELETE /admin/events/:id`             | Admin   | Delete event (blocked if bookings exist)   |
+| `GET  /admin/enquiries`                | Admin   | Enquiry triage                             |
+| `PUT  /admin/enquiries/:id/status`     | Admin   | Update enquiry status                      |
+| `DELETE /admin/enquiries/:id`          | Admin   | Delete enquiry                             |
 
 ---
 
-## 💭 Reflection
+## 🧪 Testing the acceptance criteria
 
-*Optional — add a short reflection on what the team learned, challenges faced, and how they were overcome.*
+A few manual checks the marker (or you) might run:
+
+- **Hashed passwords** — connect to Mongo and verify the `password` field in `users` is a `$2b$…` bcrypt hash, not plaintext.
+- **403 on admin routes** — log in as `user1@eventflow.local` and visit `/admin/events`. You should see a 403 page, not a crash.
+- **Atomic booking** — open the same event in two tabs as two different users when only one ticket remains; only one booking should succeed.
+- **500 page** — with `NODE_ENV=development`, visit `/__test-error` to render the global error handler.
+- **Idempotent seed** — run `npm run seed -- --force` twice; the second run must succeed without errors.
 
 ---
 
-## 📜 Academic Integrity
+## 🖼️ Screenshots
 
-This project is the original work of the listed team members, submitted for **WPR371** at Belgium Campus iTversity. External resources (documentation, tutorials) were consulted for learning purposes and adapted where used. All code and design decisions can be explained and justified by the team.
+> _Add screenshots of the home page, dashboards, and admin views here before submission._
+
+```
+docs/screenshots/home.png
+docs/screenshots/admin-dashboard.png
+docs/screenshots/booking.png
+```
+
+---
+
+## 📚 Academic integrity
+
+This project was developed as coursework for **WPR371** at **Belgium Campus iTversity**. All members of the team contributed to the design, implementation, and testing as listed in the team table. External code, libraries, and learning resources are credited via `package.json` dependencies and inline comments where applicable. No portion of this submission may be re-used by other students without attribution.
 
 ---
 
 ## 📄 License
 
-This project is developed for academic purposes as part of coursework at Belgium Campus iTversity.
+MIT — see `LICENSE` (or `package.json`) for details. Provided for educational use.
