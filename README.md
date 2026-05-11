@@ -113,11 +113,60 @@ eventflow/
 
 ## 🚀 Setup
 
-### Prerequisites
+There are two ways to run EventFlow:
+
+- **Option A — Docker (recommended).** The fastest path. You only need Docker installed; everything else (Node.js, MongoDB) runs inside containers.
+- **Option B — Local Node.js + MongoDB.** Use this if you want to develop against the code directly with hot-reload.
+
+---
+
+### Option A — Run with Docker 🐳
+
+#### Prerequisites
+- **Docker Desktop** (Windows / macOS) or **Docker Engine + Docker Compose** (Linux). Nothing else — no Node.js, no MongoDB install required.
+
+#### 1. Start the app
+
+From inside the project folder:
+
+```bash
+docker compose up --build
+```
+
+This builds the app image, starts MongoDB in a container, and launches EventFlow.
+
+Visit **http://localhost:3000**.
+
+#### 2. Seed the database (first run only)
+
+In a **second terminal**, while the app is running:
+
+```bash
+docker compose run --rm seed
+```
+
+This populates demo events and the default user accounts listed in the [Default credentials](#-default-credentials-after-seeding) section below.
+
+#### 3. Stop the app
+
+In the terminal running compose, press `Ctrl+C`, then optionally:
+
+```bash
+docker compose down            # stop & remove containers (keeps DB data)
+docker compose down -v         # also wipe the MongoDB volume (fresh start)
+```
+
+MongoDB data persists between restarts in the named Docker volume `mongo-data`.
+
+---
+
+### Option B — Run locally with Node.js
+
+#### Prerequisites
 - Node.js **v18 or newer**
 - A running MongoDB instance (local `mongod` on port 27017 works out of the box)
 
-### 1. Clone & install
+#### 1. Clone & install
 
 ```bash
 git clone <your-repo-url> eventflow
@@ -125,7 +174,7 @@ cd eventflow
 npm install
 ```
 
-### 2. Configure environment
+#### 2. Configure environment
 
 ```bash
 cp .env.example .env
@@ -140,7 +189,7 @@ SESSION_SECRET=replace_with_a_long_random_string
 NODE_ENV=development
 ```
 
-### 3. Seed the database
+#### 3. Seed the database
 
 ```bash
 npm run seed             # interactive — prompts before clearing
@@ -148,7 +197,7 @@ npm run seed             # interactive — prompts before clearing
 npm run seed -- --force  # clear and reseed without prompting
 ```
 
-### 4. Run the app
+#### 4. Run the app
 
 ```bash
 npm run dev    # nodemon (development)
