@@ -1,5 +1,28 @@
 const User = require('../models/User');
 
+const MAX_ATTEMPTS = 3;
+const LOCKOUT_MS = 60 * 1000; // 1 minute
+
+// In-memory store: email -> { attempts, lockedUntil }
+const loginAttempts = new Map();
+
+function getAttemptRecord(email) {
+  return loginAttempts.get(email) || { attempts: 0, lockedUntil: null };
+}
+
+function recordFailure(email) {
+  const rec = getAttemptRecord(email);
+  rec.attempts += 1;
+  if (rec.attempts >= MAX_ATTEMPTS) {
+    rec.lockedUntil = Date.now() + LOCKOUT_MS;
+  }
+  loginAttempts.set(email, rec);
+}
+
+function clearAttempts(email) {
+  loginAttempts.delete(email);
+}
+
 // Build a minimal serialisable user payload for the session.
 const sessionPayload = (user) => ({
   id: user._id.toString(),
@@ -50,17 +73,40 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
+
+    const rec = getAttemptRecord(email);
+    if (rec.lockedUntil && Date.now() < rec.lockedUntil) {
+      const secsLeft = Math.ceil((rec.lockedUntil - Date.now()) / 1000);
+      return res.status(429).render('auth/login', {
+        title: 'Log in',
+        formData: { email },
+        errors: [{ msg: `Too many failed attempts. Try again in ${secsLeft} second${secsLeft !== 1 ? 's' : ''}.` }]
+      });
+    }
+
+    // Lock expired — reset so counter starts fresh.
+    if (rec.lockedUntil && Date.now() >= rec.lockedUntil) {
+      clearAttempts(email);
+    }
+
     const user = await User.findOne({ email });
 
     // Use the same generic message for both "no user" and "wrong password" to avoid email enumeration.
     if (!user || !(await user.comparePassword(password))) {
+      recordFailure(email);
+      const updated = getAttemptRecord(email);
+      const attemptsLeft = MAX_ATTEMPTS - updated.attempts;
+      const msg = updated.lockedUntil
+        ? `Too many failed attempts. Account locked for 1 minute.`
+        : `Invalid email or password. ${attemptsLeft} attempt${attemptsLeft !== 1 ? 's' : ''} remaining.`;
       return res.status(401).render('auth/login', {
         title: 'Log in',
         formData: { email },
-        errors: [{ msg: 'Invalid email or password' }]
+        errors: [{ msg }]
       });
     }
 
+    clearAttempts(email);
     req.session.user = sessionPayload(user);
     const target = req.session.returnTo || '/dashboard';
     delete req.session.returnTo;
