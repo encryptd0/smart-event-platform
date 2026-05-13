@@ -1,21 +1,20 @@
 <section class="hero">
-  <div class="container">
+  <div class="container position-relative">
     <div class="row align-items-center">
-      <div class="col-lg-8">
-        <h1 class="display-5 mb-2">Discover events worth showing up for.</h1>
-        <p class="lead mb-0">
-          Conferences, workshops, festivals and more — all in one place.
-          Book your seat in seconds.
-        </p>
+      <div class="col-lg-7">
+        <p class="section-heading mb-3"><i class="bi bi-lightning-fill" style="color:var(--ef-accent);"></i> EventFlow</p>
+        <h1 class="display-5 mb-3">Discover events<br>worth showing up for.</h1>
+        <p class="lead mb-0">Conferences, workshops, festivals and more — all in one place. Book your seat in seconds.</p>
       </div>
-      <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+      <div class="col-lg-5 text-lg-end mt-4 mt-lg-0">
         <% if (!currentUser) { %>
           <a href="/auth/register" class="btn btn-accent btn-lg">
-            <i class="bi bi-person-plus"></i> Create account
+            <i class="bi bi-person-plus me-1"></i> Get started
           </a>
+          <a href="/auth/login" class="btn btn-light btn-lg ms-2">Log in</a>
         <% } else { %>
           <a href="/dashboard" class="btn btn-light btn-lg">
-            <i class="bi bi-speedometer2"></i> My dashboard
+            <i class="bi bi-speedometer2 me-1"></i> My dashboard
           </a>
         <% } %>
       </div>
@@ -24,50 +23,56 @@
 </section>
 
 <div class="container">
-  <form method="GET" action="/" class="row g-2 mb-4 align-items-end">
-    <div class="col-md-4">
-      <label class="form-label small text-muted mb-1">Search</label>
-      <input type="text" name="search" class="form-control"
-             placeholder="Title or keyword…"
-             value="<%= filters.search %>" />
-    </div>
-    <div class="col-md-3">
-      <label class="form-label small text-muted mb-1">Category</label>
-      <select name="category" class="form-select">
-        <option value="all" <%= filters.category === 'all' ? 'selected' : '' %>>All categories</option>
-        <% categories.forEach(function(c) { %>
-          <option value="<%= c %>" <%= filters.category === c ? 'selected' : '' %>><%= c %></option>
-        <% }) %>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <label class="form-label small text-muted mb-1">Date range</label>
-      <select name="dateRange" class="form-select">
-        <option value="all"   <%= filters.dateRange === 'all'   ? 'selected' : '' %>>All upcoming</option>
-        <option value="week"  <%= filters.dateRange === 'week'  ? 'selected' : '' %>>This week</option>
-        <option value="month" <%= filters.dateRange === 'month' ? 'selected' : '' %>>This month</option>
-      </select>
-    </div>
-    <div class="col-md-2">
-      <label class="form-label small text-muted mb-1">Availability</label>
-      <select name="availability" class="form-select">
-        <option value="all"       <%= filters.availability === 'all'       ? 'selected' : '' %>>Any</option>
-        <option value="available" <%= filters.availability === 'available' ? 'selected' : '' %>>Available</option>
-        <option value="soldout"   <%= filters.availability === 'soldout'   ? 'selected' : '' %>>Sold out</option>
-      </select>
-    </div>
-    <div class="col-md-1 d-grid">
-      <button type="submit" class="btn btn-primary">
-        <i class="bi bi-funnel-fill"></i>
-      </button>
-    </div>
-  </form>
+  <div class="filter-bar">
+    <form method="GET" action="/" class="row g-2 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label">Search</label>
+        <div class="input-group">
+          <span class="input-group-text" style="background:var(--ef-surface-2);border-color:var(--ef-border);color:var(--ef-muted);">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" name="search" class="form-control border-start-0"
+                 placeholder="Title or keyword…" value="<%= filters.search %>" />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">Category</label>
+        <select name="category" class="form-select">
+          <option value="all" <%= filters.category === 'all' ? 'selected' : '' %>>All categories</option>
+          <% categories.forEach(function(c) { %>
+            <option value="<%= c %>" <%= filters.category === c ? 'selected' : '' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Date</label>
+        <select name="dateRange" class="form-select">
+          <option value="all"   <%= filters.dateRange === 'all'   ? 'selected' : '' %>>All upcoming</option>
+          <option value="week"  <%= filters.dateRange === 'week'  ? 'selected' : '' %>>This week</option>
+          <option value="month" <%= filters.dateRange === 'month' ? 'selected' : '' %>>This month</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label class="form-label">Availability</label>
+        <select name="availability" class="form-select">
+          <option value="all"       <%= filters.availability === 'all'       ? 'selected' : '' %>>Any</option>
+          <option value="available" <%= filters.availability === 'available' ? 'selected' : '' %>>Available</option>
+          <option value="soldout"   <%= filters.availability === 'soldout'   ? 'selected' : '' %>>Sold out</option>
+        </select>
+      </div>
+      <div class="col-md-1 d-grid">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-funnel-fill"></i>
+        </button>
+      </div>
+    </form>
+  </div>
 
   <% if (events.length === 0) { %>
     <div class="empty-state">
-      <i class="bi bi-calendar-x"></i>
+      <div class="empty-icon mx-auto"><i class="bi bi-calendar-x"></i></div>
       <h5>No events match your filters</h5>
-      <p>Try widening your search or clearing the filters.</p>
+      <p class="mb-3">Try widening your search or clearing the filters.</p>
       <a href="/" class="btn btn-outline-primary">Clear filters</a>
     </div>
   <% } else { %>

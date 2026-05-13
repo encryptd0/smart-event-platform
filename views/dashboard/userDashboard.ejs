@@ -1,22 +1,31 @@
 <div class="container py-4">
-  <h2 class="mb-1">My bookings</h2>
-  <p class="text-muted mb-4">Manage your tickets and history.</p>
+  <div class="page-header">
+    <div class="d-flex align-items-center justify-content-between">
+      <div>
+        <p class="section-heading mb-1">My Account</p>
+        <h2>My Bookings</h2>
+      </div>
+      <a href="/" class="btn btn-outline-primary btn-sm">
+        <i class="bi bi-plus me-1"></i> Browse events
+      </a>
+    </div>
+  </div>
 
   <% if (bookings.length === 0) { %>
-    <div class="empty-state form-card">
-      <i class="bi bi-ticket-perforated"></i>
+    <div class="empty-state">
+      <div class="empty-icon mx-auto"><i class="bi bi-ticket-perforated"></i></div>
       <h5>No bookings yet</h5>
-      <p>Browse upcoming events and book your seat.</p>
+      <p class="mb-3">Browse upcoming events and book your seat.</p>
       <a href="/" class="btn btn-primary">Browse events</a>
     </div>
   <% } else { %>
-    <div class="table-responsive form-card p-0">
+    <div class="dashboard-table-wrap">
       <table class="table align-middle mb-0">
-        <thead class="table-light">
+        <thead>
           <tr>
             <th>Event</th>
             <th>Date</th>
-            <th>Quantity</th>
+            <th>Qty</th>
             <th>Total</th>
             <th>Status</th>
             <th>Booked on</th>
@@ -33,40 +42,48 @@
             <tr>
               <td>
                 <% if (ev) { %>
-                  <a href="/events/<%= ev._id %>" class="fw-semibold text-decoration-none"><%= ev.title %></a>
-                  <div class="small text-muted"><%= ev.location %></div>
+                  <a href="/events/<%= ev._id %>" class="fw-semibold" style="color:var(--ef-text);"><%= ev.title %></a>
+                  <div class="small" style="color:var(--ef-muted);"><i class="bi bi-geo-alt" style="color:var(--ef-primary);"></i> <%= ev.location %></div>
                 <% } else { %>
-                  <span class="text-muted"><em>(event removed)</em></span>
+                  <span style="color:var(--ef-muted);"><em>Event removed</em></span>
                 <% } %>
               </td>
-              <td>
+              <td style="color:var(--ef-text-soft);font-size:0.875rem;">
                 <%= eventDate ? eventDate.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—' %>
               </td>
-              <td><%= b.quantity %></td>
-              <td>
+              <td style="font-weight:600;"><%= b.quantity %></td>
+              <td style="color:var(--ef-accent);font-weight:700;">
                 <% if ((b.totalPrice || 0) > 0) { %>R<%= Number(b.totalPrice).toFixed(2) %><% } else { %>Free<% } %>
               </td>
-              <td>
-                <span class="status-pill status-<%= b.status %>"><%= b.status %></span>
-              </td>
-              <td><%= new Date(b.bookingDate).toLocaleDateString('en-GB') %></td>
+              <td><span class="status-pill status-<%= b.status %>"><%= b.status %></span></td>
+              <td style="color:var(--ef-muted);font-size:0.8rem;"><%= new Date(b.bookingDate).toLocaleDateString('en-GB') %></td>
               <td class="text-end">
                 <% if (canCancel) { %>
                   <form action="/bookings/<%= b._id %>/cancel" method="POST" class="d-inline"
                         data-confirm="Cancel this booking? Your tickets will be released.">
                     <button type="submit" class="btn btn-sm btn-outline-danger">
-                      <i class="bi bi-x-circle"></i> Cancel
+                      <i class="bi bi-x-circle me-1"></i>Cancel
                     </button>
                   </form>
                 <% } else if (b.status === 'cancelled') { %>
-                  <span class="text-muted small">cancelled</span>
+                  <span style="color:var(--ef-muted);font-size:0.8rem;">cancelled</span>
                 <% } else { %>
-                  <span class="text-muted small">past event</span>
+                  <span style="color:var(--ef-muted);font-size:0.8rem;">past event</span>
                 <% } %>
               </td>
             </tr>
           <% }) %>
         </tbody>
+        <tfoot>
+          <tr style="background:var(--ef-surface-2);">
+            <td colspan="2" class="text-end fw-semibold" style="color:var(--ef-text-soft);font-size:0.85rem;padding:0.85rem 1rem;">Totals</td>
+            <td style="font-weight:700;color:var(--ef-text);"><%= totalQuantity %> ticket<%= totalQuantity !== 1 ? 's' : '' %></td>
+            <td style="font-weight:700;color:var(--ef-accent);">
+              <%= totalPrice > 0 ? 'R' + Number(totalPrice).toFixed(2) : 'Free' %>
+            </td>
+            <td colspan="3"></td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   <% } %>

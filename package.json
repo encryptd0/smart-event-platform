@@ -23,6 +23,7 @@
     "mongoose": "^8.5.1"
   },
   "devDependencies": {
+    "docx": "^9.6.1",
     "nodemon": "^3.1.4"
   }
 }

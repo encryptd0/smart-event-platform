@@ -1,65 +1,75 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
   <div class="container">
     <a class="navbar-brand" href="/">
       <i class="bi bi-calendar-event-fill brand-mark"></i>
       Event<span class="brand-mark">Flow</span>
     </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
       aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="mainNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
         <li class="nav-item">
-          <a class="nav-link <%= currentPath === '/' ? 'active fw-semibold' : '' %>" href="/">Browse events</a>
+          <a class="nav-link <%= currentPath === '/' ? 'active' : '' %>" href="/">
+            <i class="bi bi-compass me-1"></i>Browse
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= currentPath.startsWith('/contact') ? 'active fw-semibold' : '' %>" href="/contact">Contact</a>
+          <a class="nav-link <%= currentPath.startsWith('/contact') ? 'active' : '' %>" href="/contact">
+            <i class="bi bi-chat-dots me-1"></i>Contact
+          </a>
         </li>
       </ul>
 
-      <ul class="navbar-nav ms-auto align-items-lg-center">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+        <li class="nav-item">
+          <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">
+            <i class="bi bi-sun-fill" id="themeIcon"></i>
+          </button>
+        </li>
         <% if (!currentUser) { %>
           <li class="nav-item">
             <a class="nav-link" href="/auth/login">Log in</a>
           </li>
-          <li class="nav-item">
-            <a class="btn btn-primary ms-lg-2" href="/auth/register">Sign up</a>
+          <li class="nav-item ms-lg-1">
+            <a class="btn btn-primary btn-sm" href="/auth/register">Sign up</a>
           </li>
         <% } else { %>
           <li class="nav-item">
-            <a class="nav-link <%= currentPath.startsWith('/dashboard') ? 'active fw-semibold' : '' %>" href="/dashboard">
-              <i class="bi bi-speedometer2"></i> Dashboard
+            <a class="nav-link <%= currentPath.startsWith('/dashboard') ? 'active' : '' %>" href="/dashboard">
+              <i class="bi bi-speedometer2 me-1"></i>Dashboard
             </a>
           </li>
 
           <% if (currentUser.role === 'admin') { %>
             <li class="nav-item">
-              <a class="nav-link <%= currentPath.startsWith('/admin/events') ? 'active fw-semibold' : '' %>" href="/admin/events">
-                <i class="bi bi-calendar-week"></i> Manage events
+              <a class="nav-link <%= currentPath.startsWith('/admin/events') ? 'active' : '' %>" href="/admin/events">
+                <i class="bi bi-calendar-week me-1"></i>Events
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link <%= currentPath.startsWith('/admin/enquiries') ? 'active fw-semibold' : '' %>" href="/admin/enquiries">
-                <i class="bi bi-inbox"></i> Enquiries
+              <a class="nav-link <%= currentPath.startsWith('/admin/enquiries') ? 'active' : '' %>" href="/admin/enquiries">
+                <i class="bi bi-inbox me-1"></i>Enquiries
               </a>
             </li>
           <% } %>
 
-          <li class="nav-item">
-            <span class="nav-link text-muted small">
-              <i class="bi bi-person-circle"></i> <%= currentUser.name %>
+          <li class="nav-item ms-lg-1">
+            <span class="user-chip">
+              <i class="bi bi-person-circle"></i>
+              <%= currentUser.name.split(' ')[0] %>
               <% if (currentUser.role === 'admin') { %>
-                <span class="badge bg-warning text-dark ms-1">Admin</span>
+                <span class="badge bg-warning ms-1" style="font-size:0.6rem;">Admin</span>
               <% } %>
             </span>
           </li>
           <li class="nav-item">
             <form action="/auth/logout" method="POST" class="d-inline">
               <button type="submit" class="btn btn-outline-secondary btn-sm">
-                <i class="bi bi-box-arrow-right"></i> Log out
+                <i class="bi bi-box-arrow-right"></i>
               </button>
             </form>
           </li>

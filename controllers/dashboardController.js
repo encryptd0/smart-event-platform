@@ -22,9 +22,14 @@ exports.user = async (req, res, next) => {
       .sort({ bookingDate: -1 })
       .lean();
 
+    const totalQuantity = bookings.reduce((sum, b) => sum + (b.quantity || 0), 0);
+    const totalPrice = bookings.reduce((sum, b) => sum + (b.totalPrice || 0), 0);
+
     res.render('dashboard/userDashboard', {
       title: 'My dashboard',
       bookings,
+      totalQuantity,
+      totalPrice,
       now: new Date()
     });
   } catch (err) {
